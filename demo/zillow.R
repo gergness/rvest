@@ -19,26 +19,27 @@ area <- function(x) {
   val <- as.numeric(gsub("[^0-9.]+", "", x))
   as.integer(val * ifelse(grepl("ac", x), 43560, 1))
 }
+
 sqft <- houses %>%
-  html_node(".property-lot") %>%
+  html_node(".lot-size") %>%
   html_text() %>%
   area()
 
 year_build <- houses %>%
-  html_node(".property-year") %>%
+  html_node(".built-year") %>%
   html_text() %>%
-  gsub("Built in ", "", .) %>%
-  as.integer()
+  tidyr::extract_numeric()
 
 price <- houses %>%
-  html_node(".price-large") %>%
+  html_nodes(".price-large") %>%
   html_text() %>%
   tidyr::extract_numeric()
 
 params <- houses %>%
-  html_node(".property-data") %>%
+  html_node(".beds-baths-sqft") %>%
   html_text() %>%
-  strsplit(", ")
+  repair_encoding("UTF-8") %>%
+  strsplit(" \U2022 ")
 beds <- params %>%
   pluck(1, character(1)) %>%
   extract_numeric()
