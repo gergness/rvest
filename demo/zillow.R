@@ -31,7 +31,7 @@ year_build <- houses %>%
   tidyr::extract_numeric()
 
 price <- houses %>%
-  html_nodes(".price-large") %>%
+  html_node(".price-large") %>%
   html_text() %>%
   tidyr::extract_numeric()
 
